@@ -1,19 +1,24 @@
 const express = require('express');
+const userRoutes = require('./routes/user');
 const mongoose = require('mongoose');
-const app = express();
-const dotenv = require('dotenv');
-const dotenvResult = dotenv.config();
 
+const dotenv = require('dotenv');
+dotenv.config();
 const mongooseUrlConnect =  process.env.DB_URL;
-mongoose.connect( `${mongooseUrlConnect}`,
-{useNewUrlParser: true,
-    useUnifiedTopology: true})
+
+
+// Connection mongoDB
+mongoose.connect( `${mongooseUrlConnect}`, {useNewUrlParser: true,useUnifiedTopology: true})
 .then(() => console.log('Connexion à MongoDB réussie !'))
 .catch(() => console.log('Connexion à MongoDB échouée !')); 
-console.log(process.env.MONGOOSE_URL);
 
 
 
 
+const app = express();
+
+
+
+app.use('/api/auth', userRoutes);
 
 module.exports = app;
