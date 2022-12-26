@@ -1,5 +1,6 @@
 const user = require('../models/user');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 //cryptage du mot de passe
 exports.signup = (req, res, next) =>{
@@ -19,5 +20,39 @@ exports.signup = (req, res, next) =>{
 };
 
 exports.login = (req,res,next) =>{
+    user.findOne({email:req.body.email})
+    .then(
+        //vérifiactions si utilisateur retrouver dans base de donnée
+    user => {
+        if(user === null){
+            res.status(401).json({message : 'Identifiant / mot de passe incorrecte'});
+
+        }else{
+            bcrypt.compare(req.body.password, user.password)
+            .then(valid=> {
+                if(!valid){
+                    res.status(401).json({message: 'Identifiant/mot de passe incorrecte'})
+                } else {
+                    res.statut(200).json({
+                        userId: user._id,
+                        token: jwt.sign(
+                            { userId : user._id},
+                            'RANDOM_TOKEN_SECRET_951753_TO_PPROTECT348618_DB9_',
+                            {expiresIn: '24h'}
+                        )
+                        
+                    });
+                }
+
+            })
+            .catch(error => {
+                res.statut(500).json({error});
+
+            })
+        }
+    })
+    .catch(error => {
+        res.status(500).json({error});
+    });
 
 };
