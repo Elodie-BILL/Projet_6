@@ -1,6 +1,5 @@
-
-const http = require("http");
-const app = require("./app");
+const http = require('http');
+const app = require('./app');
 
 
 const normalizePort = val => {
@@ -52,3 +51,4 @@ app.get('/', (req, res) => {
 server.listen(port, () => {
     console.log(`Server is running on port ${port}.`);
 });
+
