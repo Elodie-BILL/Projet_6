@@ -1,18 +1,18 @@
-const Thing = require('../models/Thing');
+const SauceCrtl = require('../models/sauce');
 
-// exports.createThing = (req, res, next) => {
+// exports.createSauce = (req, res, next) => {
 //     delete req.body._id;
-//     const thing = new Thing({
+//     const sauce = new Sauce({
 //         ...req.body
 //     });
-//     thing.save()
+//     sauce.save()
 //     .then(()=> res.status(201).json({message: 'Sauce ajoutée'}))
 //     .catch (error => res.satus(400).json({ error }));
  
 // }
 
-// exports.getOneThing = (req, res, next) => {
-//     thing.findOne({
+// exports.getOneSauce = (req, res, next) => {
+//     sauce.findOne({
 //         _id: req.params.id
 //     })
 //     .then((thing) => {res.status(200).json(thing)})
@@ -22,8 +22,8 @@ const Thing = require('../models/Thing');
     
 // };
 
-// exports.modifyThing = (req, res, next) => {
-//     const thing = new Thing({
+// exports.modifySauce = (req, res, next) => {
+//     const sauce = new Sauce({
 //       _id: req.params.id,
 //       title: req.body.title,
 //       description: req.body.description,
@@ -46,8 +46,8 @@ const Thing = require('../models/Thing');
 //     );
 //   };
   
-//   exports.deleteThing = (req, res, next) => {
-//     Thing.deleteOne({_id: req.params.id}).then(
+//   exports.deleteSauce = (req, res, next) => {
+//     Sauce.deleteOne({_id: req.params.id}).then(
 //       () => {
 //         res.status(200).json({
 //           message: 'Supprimé'
@@ -62,10 +62,10 @@ const Thing = require('../models/Thing');
 //     );
 //   };
   
-//   exports.getAllStuff = (req, res, next) => {
-//     Thing.find().then(
-//       (things) => {
-//         res.status(200).json(Things);
+//   exports.getAllSauce = (req, res, next) => {
+//     Sauce.find().then(
+//       (sauces) => {
+//         res.status(200).json(Sauces);
 //       }
 //     ).catch(
 //       (error) => {

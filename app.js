@@ -1,7 +1,7 @@
 const express = require('express');
-app = express();
+const app = express();
 
-// const stuffRoutes = require('./routes/stuff');
+// const stuffRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/User');
 
 const dotenv = require('dotenv');
@@ -25,7 +25,7 @@ app.use((req, res, next) => {
     next();
 });
 
-// app.use('/api/stuff', stuffRoutes);
+// app.use('/api/sauces', sauceRoutes);
 app.use('/api/auth', userRoutes);
 
 
