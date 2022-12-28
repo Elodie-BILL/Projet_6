@@ -1,26 +1,26 @@
 const Thing = require('../models/Thing');
 
-exports.createThing = (req, res, next) => {
-    delete req.body._id;
-    const thing = new Thing({
-        ...req.body
-    });
-    thing.save()
-    .then(()=> res.status(201).json({message: 'Sauce ajoutée'}))
-    .catch (error => res.satus(400).json({ error }));
+// exports.createThing = (req, res, next) => {
+//     delete req.body._id;
+//     const thing = new Thing({
+//         ...req.body
+//     });
+//     thing.save()
+//     .then(()=> res.status(201).json({message: 'Sauce ajoutée'}))
+//     .catch (error => res.satus(400).json({ error }));
  
-}
+// }
 
-exports.getOneThing = (req, res, next) => {
-    thing.findOne({
-        _id: req.params.id
-    })
-    .then((thing) => {res.status(200).json(thing)})
-    .catch((error) =>{
-        res.status(404).json({ error: error});
-    });
+// exports.getOneThing = (req, res, next) => {
+//     thing.findOne({
+//         _id: req.params.id
+//     })
+//     .then((thing) => {res.status(200).json(thing)})
+//     .catch((error) =>{
+//         res.status(404).json({ error: error});
+//     });
     
-};
+// };
 
 // exports.modifyThing = (req, res, next) => {
 //     const thing = new Thing({
