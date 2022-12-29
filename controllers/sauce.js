@@ -3,27 +3,27 @@ const sauceCrtl = require('../models/sauce');
 exports.createSauce = (req, res, next) => {
     delete req.body._id;
     const sauce = new Sauce({
-        ...req.body
+      ...req.body
     });
     sauce.save()
     .then(()=> {
-        res.status(201).json({message: 'Sauce ajoutée'}
+      res.status(201).json({message: 'Sauce ajoutée'}
     )})
     .catch ((error) => {
-        res.satus(400).json({ error });
+      res.satus(400).json({ error });
     });
  
 }
 
 exports.getOneSauce = (req, res, next) => {
     Sauce.findOne({
-        _id: req.params.id
+      _id: req.params.id
     })
     .then((thing) => {
-        res.status(200).json(thing)
+      res.status(200).json(thing)
     })
     .catch((error) =>{
-        res.status(404).json({ error: error});
+      res.status(404).json({ error: error});
     });
     
 };
