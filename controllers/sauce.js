@@ -37,11 +37,11 @@ exports.modifySauce = (req, res, next) => {
       price: req.body.price,
       userId: req.body.userId
     });
-   sauce.updateOne({_id: req.params.id}, sauce).then(
-      () => {
-        res.status(201).json({
-          message: 'Commentaire modifié!'
-        });
+   sauce.updateOne({_id: req.params.id}, sauce)
+    .then(() => {
+      res.status(201).json({
+         message: 'Commentaire modifié!'
+      });
     })
     .catch(
       (error) => {
@@ -55,9 +55,9 @@ exports.modifySauce = (req, res, next) => {
   exports.deleteSauce = (req, res, next) => {
     Sauce.deleteOne({_id: req.params.id})
     .then(() => {
-        res.status(200).json({
-          message: 'Supprimé'
-        });
+      res.status(200).json({
+        message: 'Supprimé'
+      });
     })
     .catch(
       (error) => {
@@ -71,13 +71,11 @@ exports.modifySauce = (req, res, next) => {
   exports.getAllSauce = (req, res, next) => {
     Sauce.find()
     .then((sauces) => {
-        res.status(200).json(sauces);
-      }
-    ).catch(
-      (error) => {
-        res.status(400).json({
-          error: error
-        });
-      }
-    );
+      res.status(200).json(sauces);
+    })
+    .catch((error) => {
+      res.status(400).json({
+        error: error
+      });
+    });
   };

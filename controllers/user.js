@@ -1,7 +1,6 @@
-const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-
+const User = require('../models/user');
 
 //cryptage du mot de passe
 exports.signup = (req, res, next) => {
@@ -13,12 +12,12 @@ exports.signup = (req, res, next) => {
             password: hash 
         });
         user.save()
-        .then(() => 
-            res.status(201).json({ message: 'Compte utilisateur crée'})
-        ) /*201 création de ressource*/
-        .catch(
-            error => res.status(400).json({ error })
-        );
+            .then(() => 
+                res.status(201).json({ message: 'Compte utilisateur crée'})
+            ) /*201 création de ressource*/
+            .catch(
+                error => res.status(400).json({ error })
+            );
     })
     .catch(error => res.status(500).json({ error }));
     //erreur 500 = erreur server
@@ -33,7 +32,7 @@ exports.login = (req,res,next) =>{
     .then(
         //vérifiactions si utilisateur retrouver dans base de donnée
     user => {
-        if(user === null){
+        if(!user){
             res.status(401).json({message : 'Identifiant / mot de passe incorrecte'});
 
         }else{
@@ -46,7 +45,7 @@ exports.login = (req,res,next) =>{
                         userId: user._id,
                         token: jwt.sign(
                             { userId : user._id},
-                            'RANDOM_TOKEN_SECRET_951753_TO_PPROTECT348618_DB9_',
+                            'RANDOM_TOKEN_SECRET',
                             {expiresIn: '24h'}
                         )
                         
