@@ -69,7 +69,7 @@ exports.modifySauce = (req, res, next) => {
   };
   
   exports.getAllSauce = (req, res, next) => {
-    Sauce.find()
+    sauce.find()
     .then((sauces) => {
       res.status(200).json(sauces);
     })
