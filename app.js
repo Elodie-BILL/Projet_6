@@ -1,13 +1,12 @@
 const express = require('express');
-const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-const path = require("path");
-
-const dotenv = require('dotenv');
-dotenv.config();
-
 const mongoose = require('mongoose');
+const dotenv = require('dotenv').config();
+// const path = require("path");
+const userRoutes = require('./routes/user');
+const sauceRoutes = require('./routes/sauce');
+
+const app = express();
+
 mongoose.set('strictQuery', true); //garantit que les valeurs transmises à notre constructeur de modèle qui n'ont pas été spécifiées dans notre schéma ne sont pas enregistrées dans la base de données.
 // const mongooseUrlConnect =  process.env.DB_URL;
 // Connection mongoDB
@@ -15,9 +14,6 @@ mongoose.set('strictQuery', true); //garantit que les valeurs transmises à notr
 mongoose.connect( process.env.DB_URL, {useNewUrlParser: true, useUnifiedTopology: true})
 .then(() => console.log('Connexion à MongoDB réussie !'))
 .catch(() => console.log('Connexion à MongoDB échouée !')); 
-
-const userRoutes = require('./routes/user');
-const sauceRoutes = require('./routes/sauce');
 
 
 app.use((req, res, next) => {
@@ -28,6 +24,8 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use('/api/auth', userRoutes);
 app.use('/api/sauces', sauceRoutes);
 

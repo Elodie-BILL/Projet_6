@@ -3,7 +3,7 @@ const app = require('./app');
 
 
 const normalizePort = val => {
-    const port = parseInt(val);
+    const port = parseInt(val,10);
 
     if (isNaN (port)) {
         return val;
@@ -45,9 +45,9 @@ server.on('listening', () => {
     console.log('Listening on ' + bind);
 });
 
-app.get('/', (req, res) => {
-    res.json({ message: 'Bienvenue dans mon application !' })
-})
+// app.get('/', (req, res) => {
+//     res.json({ message: 'Bienvenue dans mon application !' })
+// })
 server.listen(port, () => {
     console.log(`Server is running on port ${port}.`);
 });
