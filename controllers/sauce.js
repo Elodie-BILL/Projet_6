@@ -22,7 +22,7 @@ exports.createSauce = (req, res) => {
  
 }
 
-exports.getOneSauce = (req, res, next) => {
+exports.getOneSauce = (req, res) => {
     Sauce.findOne({
       _id: req.params.id
     })
@@ -38,27 +38,19 @@ exports.getOneSauce = (req, res, next) => {
 exports.modifySauce = (req, res) => {
   // Vérification existance champs 'file'
   const sauceObject = req.file ? {
-    ... JSON.parse(req.body.sauce),
+    ... JSON.parse(req.body.Sauce),
     imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
-    
-
   }: {...req.body};  
 
-  delete sauceObject.imageUtl;
   delete sauceObject._userId;
+
   Sauce.findOne({_id: req.params.id}) //Récupértion sauce en base de donnée
     .then((Sauce) => {
       if (Sauce.userId != req.auth.userId){
         return res.status(401).json({ message: 'Action non autorisé'});
       } 
       
-      const filename = Sauce.imageUrl.split('/images/')[1];
-      fs.unlink(`images/${filename}`, () => {
-       
-      });
-
       Sauce.updateOne({_id: req.params.id}, {...sauceObject, _id: req.params.id})
-      .then(()=> Sauce.save())
       .then(()  =>
         res.status(200).json( { message: 'Sauce modifiée'} )
       )
@@ -79,11 +71,12 @@ exports.deleteSauce = (req, res) => {
       if (sauce.userId != req.auth.userId){
         return res.status(401).json({ message: 'Action non autorisé'});
       } 
+
       const filename = sauce.imageUrl.split('/images/')[1];
       fs.unlink(`images/${filename}`, () => {
         Sauce.deleteOne({ _id: req.params.id})
           .then(()=> 
-            res.status(200).json({message: 'sauce supprimé'})
+            res.status(200).json({message: 'sauce supprimée'})
           )
           .catch(error => 
             res.status(401).json({ error})
