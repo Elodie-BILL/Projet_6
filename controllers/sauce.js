@@ -1,7 +1,8 @@
 const Sauce = require('../models/sauce');
 const fs = require('fs');
 const sauce = require('../models/sauce');
-const { Console } = require('console');
+// const sauce = require('../models/sauce');
+// const { Console } = require('console');
 
 
 exports.createSauce = (req, res) => {
@@ -113,43 +114,60 @@ exports.likesSauce = (req, res) =>{
   const likes = req.body.likes;
 
   Sauce.findOne({_id: req.params.id}) 
-  .then(( )=> {
-    console.log(userId);
+  .then((sauce)=> {
+    console.log('dans le then');
     // if (sauce.userId != req.auth.userId){
       
     //   return res.status(401).json({ message: 'Veuillez-vous connecter'})
     // }; 
     const dataValues = {
       userLikes : sauce.usersLiked,
-      userdislikes : sauce.usersDisliked,
+      userDislikes : sauce.usersDisliked,
       likes : 0,
       dislikes : 0
     }
 
-    console.log(user);
-    if(user){
-     
-      switch (avis) {
+    console.log(dataValues);
+
+    // if(req.auth.userId){
+     console.log(userId);
+      switch (like) {
         case likes: //+1
 
           dataValues.userLikes.push(userId);   
 
         break;
 
-        case dislikes:
-          dataValues.userdislikes.push(userId);
+        case dislikes: // -1
+
+          dataValues.userDislikes.push(userId);
+
         break;
-        case neutre:
-          
-          break;
-        ;
-        default:
-
-          break;
-      }
-
       
-    };
+        case neutre: // 0
+          if(dataValues.userLikes.includes(userId)){
+
+            const indexLikes = dataValues.userLikes.indexOf(userId);
+            dataValues.userLikes.splice(indexLikes, 1);
+
+          } else {
+
+            const indexDislikes = dataValues.userDislikes.indexOf(userId);
+            dataValues.userDislikes.splice(indexDislikes, 1);
+          
+          }
+        break;
+              
+      };
+
+      dataValues.likes = dataValues.userLikes.length;
+      dataValues.dislikes = dataValues.userDislikes.length;
+      
+      Sauce.updateOne({ _id: req.params.id} , dataValues )
+        .then(() => res.status(200).json({ message: 'Avis reçu' }))
+        .catch(error => res.status(500).json({ error }))  
+    // };
+    console.log(dataValues);
   })  
   .catch( error => {
     res.status(500).json({error});
