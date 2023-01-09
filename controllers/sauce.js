@@ -1,6 +1,6 @@
 const Sauce = require('../models/sauce');
 const fs = require('fs');
-const sauce = require('../models/sauce');
+// const sauce = require('../models/sauce');
 // const sauce = require('../models/sauce');
 // const { Console } = require('console');
 
@@ -19,6 +19,7 @@ exports.createSauce = (req, res) => {
     imageUrl:`${req.protocol}://${req.get('host')}/images/${req.file.filename}`
   });
 
+  console.log(sauce);
   sauce.save()
   .then(() => (res.status(201).json({message: 'Sauce enregistrée'})))
   .catch(error => { res.status(400).json({error})});
@@ -70,7 +71,6 @@ exports.modifySauce = (req, res) => {
     });  
     
 };    
- 
   
 exports.deleteSauce = (req, res) => {
   Sauce.findOne({_id: req.params.id})
@@ -120,54 +120,49 @@ exports.likesSauce = (req, res) =>{
       
     //   return res.status(401).json({ message: 'Veuillez-vous connecter'})
     // }; 
-    const dataValues = {
-      userLikes : sauce.usersLiked,
-      userDislikes : sauce.usersDisliked,
-      likes : 0,
-      dislikes : 0
-    }
-
-    console.log(dataValues);
+   
+    console.log(sauce);
 
     // if(req.auth.userId){
      console.log(userId);
-      switch (like) {
-        case likes: //+1
+      switch (likes) {
+        case 1:
 
-          dataValues.userLikes.push(userId);   
+          sauce.usersLiked.push(userId);   
+          sauce.likes++; 
 
         break;
 
-        case dislikes: // -1
+        case -1:
 
-          dataValues.userDislikes.push(userId);
+          sauce.usersDisliked.push(userId);
+          sauce.dislikes++;
 
         break;
       
-        case neutre: // 0
-          if(dataValues.userLikes.includes(userId)){
+        case 0 :
+          if(sauce.usersLiked.includes(userId)){
 
-            const indexLikes = dataValues.userLikes.indexOf(userId);
-            dataValues.userLikes.splice(indexLikes, 1);
+            const indexLikes = sauce.usersLiked.indexOf(userId);
+            sauce.usersLiked.splice(indexLikes, 1);
+            sauce.likes--;
 
           } else {
 
-            const indexDislikes = dataValues.userDislikes.indexOf(userId);
-            dataValues.userDislikes.splice(indexDislikes, 1);
-          
+            const indexDislikes = sauce.usersDisliked.indexOf(userId);
+            sauce.usersDisliked.splice(indexDislikes, 1);
+            sauce.dislikes--;
+
           }
         break;
               
       };
-
-      dataValues.likes = dataValues.userLikes.length;
-      dataValues.dislikes = dataValues.userDislikes.length;
       
-      Sauce.updateOne({ _id: req.params.id} , dataValues )
+      Sauce.updateOne({ _id: req.params.id} , sauce )
         .then(() => res.status(200).json({ message: 'Avis reçu' }))
         .catch(error => res.status(500).json({ error }))  
     // };
-    console.log(dataValues);
+    
   })  
   .catch( error => {
     res.status(500).json({error});
