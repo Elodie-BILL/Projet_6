@@ -1,5 +1,7 @@
 const Sauce = require('../models/sauce');
 const fs = require('fs');
+const sauce = require('../models/sauce');
+const { Console } = require('console');
 
 
 exports.createSauce = (req, res) => {
@@ -38,22 +40,26 @@ exports.getOneSauce = (req, res) => {
 exports.modifySauce = (req, res) => {
   // Vérification existance champs 'file'
   const sauceObject = req.file ? {
-    ... JSON.parse(req.body.Sauce),
+    ... JSON.parse(req.body.sauce),
     imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
   }: {...req.body};  
 
   delete sauceObject._userId;
 
   Sauce.findOne({_id: req.params.id}) //Récupértion sauce en base de donnée
-    .then((Sauce) => {
-      if (Sauce.userId != req.auth.userId){
+    .then((sauce) => {
+      if (sauce.userId != req.auth.userId){
         return res.status(401).json({ message: 'Action non autorisé'});
       } 
       
+      const previousSauceFilename = sauce.imageUrl.split('/images/')[1];
       Sauce.updateOne({_id: req.params.id}, {...sauceObject, _id: req.params.id})
-      .then(()  =>
-        res.status(200).json( { message: 'Sauce modifiée'} )
-      )
+      .then(() => {
+        fs.unlink(`images/${previousSauceFilename}`, (err) => {
+          if (err) throw err;
+        });
+        res.status(200).json({ message: 'Sauce modifiée' })
+      })
       .catch(error => res.status(401).json({error}));
       
 
@@ -92,12 +98,60 @@ exports.deleteSauce = (req, res) => {
   
 exports.getAllSauce = (req, res) => {
   Sauce.find()
-    .then((Sauce) => {
-      res.status(200).json(Sauce);
+    .then((sauce) => {
+      res.status(200).json(sauce);
     })
     .catch((error) => {
       res.status(400).json({
         error: error
       });
     });
+};
+
+exports.likesSauce = (req, res) =>{
+  const userId = req.body.userId;
+  const likes = req.body.likes;
+
+  Sauce.findOne({_id: req.params.id}) 
+  .then(( )=> {
+    console.log(userId);
+    // if (sauce.userId != req.auth.userId){
+      
+    //   return res.status(401).json({ message: 'Veuillez-vous connecter'})
+    // }; 
+    const dataValues = {
+      userLikes : sauce.usersLiked,
+      userdislikes : sauce.usersDisliked,
+      likes : 0,
+      dislikes : 0
+    }
+
+    console.log(user);
+    if(user){
+     
+      switch (avis) {
+        case likes: //+1
+
+          dataValues.userLikes.push(userId);   
+
+        break;
+
+        case dislikes:
+          dataValues.userdislikes.push(userId);
+        break;
+        case neutre:
+          
+          break;
+        ;
+        default:
+
+          break;
+      }
+
+      
+    };
+  })  
+  .catch( error => {
+    res.status(500).json({error});
+  }); 
 };
