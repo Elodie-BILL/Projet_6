@@ -110,20 +110,15 @@ exports.getAllSauce = (req, res) => {
 };
 
 exports.likesSauce = (req, res) =>{
-  const userId = req.body.userId;
-  const likes = req.body.likes;
+  const userId = req.auth.userId;
+  const likes = req.body.like;
 
   Sauce.findOne({_id: req.params.id}) 
   .then((sauce)=> {
-    console.log('dans le then');
-    // if (sauce.userId != req.auth.userId){
-      
-    //   return res.status(401).json({ message: 'Veuillez-vous connecter'})
-    // }; 
-   
-    console.log(sauce);
+    // console.log('dans le then');
+    // console.log(sauce);
 
-    // if(req.auth.userId){
+   
      console.log(userId);
       switch (likes) {
         case 1:
