@@ -1,4 +1,5 @@
 const express = require('express');
+const helmet = require("helmet");
 const mongoose = require('mongoose');
 const dotenv = require('dotenv').config();
 const fs = require('fs');
@@ -18,6 +19,7 @@ mongoose.connect( process.env.DB_URL, {useNewUrlParser: true})
 .catch(() => console.log('Connexion à MongoDB échouée !')); 
 
 const app = express();
+app.use(helmet({crossOriginResourcePolicy: false,}));
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -27,10 +29,12 @@ app.use((req, res, next) => {
     next();
 });
 
+
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/api/auth', userRoutes);
 app.use('/api/sauces', sauceRoutes);
+
 
 module.exports = app;
