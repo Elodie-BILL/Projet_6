@@ -58,9 +58,9 @@ exports.modifySauce = (req, res) => {
       Sauce.updateOne({_id: req.params.id}, {...sauceObject, _id: req.params.id})
       .then(() => {
         if (req.file) {
-          fs.unlink(`images/${previousSauceFilename}`, (err) => {
-            if (err) throw err;
-          });
+            fs.unlink(`images/${previousSauceFilename}`, (err) => {
+              if (err) throw err;
+            });
         }
 
         res.status(200).json({ message: 'Sauce modifiée' })
@@ -125,16 +125,18 @@ exports.likesSauce = (req, res) =>{
      console.log(userId);
       switch (likes) {
         case 1:
-
-          sauce.usersLiked.push(userId);   
-          sauce.likes++; 
-
+          if(!sauce.usersLiked.includes(userId)){
+            sauce.usersLiked.push(userId);   
+            sauce.likes++; 
+          }
+          
         break;
 
         case -1:
-
-          sauce.usersDisliked.push(userId);
-          sauce.dislikes++;
+          if (!sauce.usersDisliked.includes(userId)) {
+            sauce.usersDisliked.push(userId);
+            sauce.dislikes++;
+          }
 
         break;
       
@@ -145,13 +147,15 @@ exports.likesSauce = (req, res) =>{
             sauce.usersLiked.splice(indexLikes, 1);
             sauce.likes--;
 
-          } else {
-
+          }
+          
+          if (sauce.usersDisliked.includes(userId)) {
             const indexDislikes = sauce.usersDisliked.indexOf(userId);
             sauce.usersDisliked.splice(indexDislikes, 1);
             sauce.dislikes--;
 
-          }
+          };
+          
         break;
               
       };
