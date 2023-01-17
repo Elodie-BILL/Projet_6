@@ -57,9 +57,12 @@ exports.modifySauce = (req, res) => {
       const previousSauceFilename = sauce.imageUrl.split('/images/')[1];
       Sauce.updateOne({_id: req.params.id}, {...sauceObject, _id: req.params.id})
       .then(() => {
-        fs.unlink(`images/${previousSauceFilename}`, (err) => {
-          if (err) throw err;
-        });
+        if (req.file) {
+          fs.unlink(`images/${previousSauceFilename}`, (err) => {
+            if (err) throw err;
+          });
+        }
+
         res.status(200).json({ message: 'Sauce modifiée' })
       })
       .catch(error => res.status(401).json({error}));
@@ -80,17 +83,17 @@ exports.deleteSauce = (req, res) => {
       } 
 
       const filename = sauce.imageUrl.split('/images/')[1];
-      fs.unlink(`images/${filename}`, () => {
-        Sauce.deleteOne({ _id: req.params.id})
-          .then(()=> 
-            res.status(200).json({message: 'sauce supprimée'})
-          )
-          .catch(error => 
-            res.status(401).json({ error})
-          );
-      });
-      
-    })
+      Sauce.deleteOne({ _id: req.params.id })
+        .then(() => {
+          res.status(200).json({ message: 'sauce supprimée' });
+          fs.unlink(`images/${filename}`, (err) => {
+            if (err) throw err;
+          });
+        })
+        .catch(error =>
+          res.status(400).json({ error })
+        );
+      })  
     .catch( error => {
       res.status(500).json({error});
     });    

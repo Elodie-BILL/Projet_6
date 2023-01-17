@@ -19,7 +19,7 @@ mongoose.connect( process.env.DB_URL, {useNewUrlParser: true})
 .catch(() => console.log('Connexion à MongoDB échouée !')); 
 
 const app = express();
-app.use(helmet({crossOriginResourcePolicy: false,}));
+app.use(helmet.crossOriginResourcePolicy({policy: "cross-origin"}));
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
