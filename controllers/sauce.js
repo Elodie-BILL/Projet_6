@@ -1,21 +1,23 @@
 const Sauce = require('../models/sauce');
 const fs = require('fs');
 
+
 exports.createSauce = (req, res) => {
   const sauceObject = JSON.parse(req.body.sauce);
   console.log(sauceObject);
 
-  delete sauceObject._id;
-  delete sauceObject._userId;
+  delete sauceObject._id;  // généré automatiuement par base de donnée
+  delete sauceObject._userId; //Eviter requête malvaillante
 
-  // récupération du token
+  // Utilisation du userId venant du token d'authentification
   const sauce = new Sauce({
     ...sauceObject,
     userId: req.auth.userId,
+    // multer donne le nom de fichier - générer l'url de l'image
     imageUrl:`${req.protocol}://${req.get('host')}/images/${req.file.filename}`
   });
-
   console.log(sauce);
+  //Enregistrement dans la base de donnée
   sauce.save()
   .then(() => (res.status(201).json({message: 'Sauce enregistrée'})))
   .catch(error => { res.status(400).json({error})});

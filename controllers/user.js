@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv').config();
 const User = require('../models/user');
 
-//cryptage du mot de passe
+//cryptage du mot de passe à l'inscription
 exports.signup = (req, res, next) => {
     
     bcrypt.hash (req.body.password, 10)
